@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Freshers Party 2026{% endblock %}
+{% block content %}
+<section class="hero-panel">
+  <div class="hero-copy">
+    <p class="eyebrow">College Freshers Celebration</p>
+    <h1>A new era. An epic chapter.</h1>
+    <p>DJ • Freshers Activities • Games • Vegetarian Food</p>
+    <p><strong>Venue:</strong> {{ event_details.venue }}</p>
+    <p><strong>Date:</strong> {{ event_details.event_date.strftime("%d/%m/%Y") }}</p>
+    <p><strong>Time:</strong> {{ event_details.starts_at }}</p>
+    <div class="actions">
+      <a class="btn primary" href="{{ url_for('book') }}">Book Your Spot</a>
+      <a class="btn secondary" href="{{ url_for('event') }}">View Event</a>
+    </div>
+  </div>
+
+  <div class="hero-side">
+    <div class="highlight-card">
+      <p class="label">Event Snapshot</p>
+      <div class="mini-grid">
+        <div class="mini-stat">
+          <span>Capacity</span>
+          <strong>{{ capacity }}</strong>
+        </div>
+        <div class="mini-stat">
+          <span>Remaining</span>
+          <strong>{{ remaining }}</strong>
+        </div>
+        {% for year, amount in prices.items() %}
+        <div class="mini-stat">
+          <span>{{ year }}</span>
+          <strong>₹{{ amount }}</strong>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="grid two pricing-grid">
+  {% for year, amount in prices.items() %}
+  <div class="card">
+    <p class="eyebrow" style="color: var(--muted); margin-bottom: 0;">{{ year }}</p>
+    <div class="price-tag">₹{{ amount }}</div>
+    <p>{{ year_capacity[year] }} tickets available</p>
+  </div>
+  {% endfor %}
+</section>
+
+<section class="info-panel">
+  <div class="stats-card">
+    <h2 class="section-title">Tickets Available</h2>
+    <div class="big-number">{{ remaining }}</div>
+    <p class="muted">of {{ capacity }} capacity remaining</p>
+  </div>
+
+  <div class="stats-card">
+    <h2 class="section-title">Freshers Vibe</h2>
+    <p class="muted">Electric dance floor, laughter-filled games, warm food, and unforgettable first impressions for the new batch.</p>
+    <div class="actions">
+      <a class="btn primary" href="{{ url_for('event') }}">Explore Details</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

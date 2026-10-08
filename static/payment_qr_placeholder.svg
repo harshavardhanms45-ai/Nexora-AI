@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400">
+<rect width="100%" height="100%" fill="white" stroke="black" stroke-width="4"/>
+<text x="200" y="180" text-anchor="middle" font-family="Arial" font-size="25">OFFICIAL PAYMENT QR</text>
+<text x="200" y="220" text-anchor="middle" font-family="Arial" font-size="16">REPLACE BEFORE USE</text>
+</svg>

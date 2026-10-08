@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Register{% endblock %}
+{% block content %}
+<div class="form-card">
+  <h1>Student Registration</h1>
+  <p class="muted">Reserve your pass for the Freshers Party 2026.</p>
+  <form method="post">
+    <label>Full Name
+      <input name="name" required maxlength="120">
+    </label>
+    <label>USN
+      <input name="usn" required maxlength="40" style="text-transform:uppercase">
+      <small class="muted">For 3rd Year only, USN must match 4RA2*AD*** (example: 4RA24AD001). 2nd Year USNs are not checked against this pattern.</small>
+    </label>
+    <label>Phone Number
+      <input name="phone" required inputmode="numeric" maxlength="10" pattern="[0-9]{10}">
+    </label>
+    <label>Year
+      <select name="year" required>
+        <option value="">Select Year</option>
+        <option value="2nd Year">2nd Year — ₹250</option>
+        <option value="3rd Year">3rd Year — ₹350</option>
+      </select>
+    </label>
+    <button class="btn primary" type="submit">Continue</button>
+  </form>
+</div>
+{% endblock %}

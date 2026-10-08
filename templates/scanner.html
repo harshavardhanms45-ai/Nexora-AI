@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block title %}QR Scanner{% endblock %}
+{% block content %}
+<div class="card scanner-card">
+  <h1>Entry QR Scanner</h1>
+  <p>Use your camera to scan a ticket QR code, or paste the token manually below.</p>
+
+  <div class="scanner-box">
+    <video id="scanner-video" autoplay playsinline muted></video>
+  </div>
+
+  <div class="actions">
+    <button id="start-scan" class="btn primary" type="button">Start Camera</button>
+    <button id="stop-scan" class="btn secondary" type="button" style="display:none;">Stop Camera</button>
+  </div>
+
+  <p id="scan-status" class="muted">Camera scanner is ready to start.</p>
+
+  <form action="/scan/" method="get" onsubmit="this.action='/scan/'+document.getElementById('token').value">
+    <label>QR Token
+      <input id="token" required placeholder="Paste token from QR URL">
+    </label>
+    <button class="btn" type="submit">Check Ticket</button>
+  </form>
+</div>
+
+<script type="module">
+  import { BrowserMultiFormatReader } from 'https://cdn.jsdelivr.net/npm/@zxing/library@0.21.3/esm/index.js';
+
+  const video = document.getElementById('scanner-video');
+  const startBtn = document.getElementById('start-scan');
+  const stopBtn = document.getElementById('stop-scan');
+  const status = document.getElementById('scan-status');
+
+  let codeReader = null;
+  let stream = null;
+
+  async function startScanner() {
+    try {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        status.textContent = 'Camera access is not supported in this browser.';
+        return;
+      }
+
+      const devices = await navigator.mediaDevices.enumerateDevices();
+      const videoDevice = devices.find(device => device.kind === 'videoinput');
+
+      stream = await navigator.mediaDevices.getUserMedia({
+        video: videoDevice ? { deviceId: videoDevice.deviceId } : { facingMode: 'environment' },
+        audio: false,
+      });
+
+      video.srcObject = stream;
+      await video.play();
+
+      codeReader = new BrowserMultiFormatReader();
+      status.textContent = 'Scanning... point your camera at the ticket QR.';
+
+      await codeReader.decodeFromVideoDevice(undefined, 'scanner-video', (result, error) => {
+        if (result) {
+          const value = result.getText();
+          window.location.href = '/scan/' + value;
+        }
+        if (error && error.name !== 'NotFoundException') {
+          status.textContent = 'Unable to read QR: ' + error.message;
+        }
+      });
+
+      startBtn.style.display = 'none';
+      stopBtn.style.display = 'inline-flex';
+    } catch (error) {
+      status.textContent = 'Camera permission was denied or no camera was found.';
+      console.error(error);
+    }
+  }
+
+  function stopScanner() {
+    if (stream) {
+      stream.getTracks().forEach(track => track.stop());
+      stream = null;
+    }
+
+    if (codeReader) {
+      codeReader.reset();
+      codeReader = null;
+    }
+
+    if (video) {
+      video.srcObject = null;
+    }
+
+    startBtn.style.display = 'inline-flex';
+    stopBtn.style.display = 'none';
+    status.textContent = 'Camera scanner is ready to start.';
+  }
+
+  startBtn.addEventListener('click', startScanner);
+  stopBtn.addEventListener('click', stopScanner);
+</script>
+{% endblock %}

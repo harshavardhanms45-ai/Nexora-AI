@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Booking Status{% endblock %}
+{% block content %}
+<div class="card">
+<h1>Booking Submitted</h1>
+<p>Your booking has been submitted successfully.</p>
+<table>
+<tr><th>Booking ID</th><td>{{ booking.booking_id }}</td></tr>
+<tr><th>Name</th><td>{{ booking.student.name }}</td></tr>
+<tr><th>USN</th><td>{{ booking.student.usn }}</td></tr>
+<tr><th>Year</th><td>{{ booking.student.year }}</td></tr>
+<tr><th>Amount</th><td>₹{{ booking.amount }}</td></tr>
+<tr><th>UTR</th><td>{{ booking.payment.utr if booking.payment and booking.payment.utr else "Not submitted" }}</td></tr>
+<tr><th>Payment Status</th><td>{{ booking.payment_status }}</td></tr>
+</table>
+{% if booking.ticket_id %}
+  <p class="success">Payment verified. Your ticket is confirmed.</p>
+  <a class="btn" href="{{ url_for('ticket', ticket_id=booking.ticket_id) }}">View Ticket</a>
+{% elif booking.payment_status == "Rejected" %}
+  <p class="error-text">Payment was rejected. Please contact the event admin.</p>
+{% else %}
+  <p class="muted">Payment verification is pending.</p>
+{% endif %}
+</div>
+{% endblock %}

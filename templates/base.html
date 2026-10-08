@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#e9edf0">
+  <title>{% block title %}Freshers Party 2026{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Archivo+Black&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <nav class="topbar" aria-label="Primary navigation">
+    <div class="brand-wrap">
+      <span class="brand-mark">F</span>
+      <a class="brand" href="{{ url_for('home') }}">Freshers Party 2026</a>
+    </div>
+    <div class="nav-links">
+      <a href="{{ url_for('event') }}">Event</a>
+      <a href="{{ url_for('book') }}">Book Now</a>
+      {% if session.get('admin_id') %}
+        <a href="{{ url_for('admin_dashboard') }}">Admin</a>
+        <a href="{{ url_for('admin_logout') }}">Logout</a>
+      {% else %}
+        <a href="{{ url_for('admin_login') }}">Admin Login</a>
+      {% endif %}
+    </div>
+  </nav>
+
+  <main class="page-shell">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}
+        <div class="alert {{ category }}">{{ message }}</div>
+      {% endfor %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <div>Freshers Party 2026 · Hassan, Karnataka</div>
+    <div>Helpline / Emergency: <a href="tel:+917483155290">+91 74831 55290</a></div>
+  </footer>
+</body>
+</html>

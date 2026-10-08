@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Confirm Booking{% endblock %}
+{% block content %}
+<div class="form-card">
+<h1>Confirm Booking</h1>
+<p><strong>Student Name:</strong> {{ booking.student.name }}</p>
+<p><strong>USN:</strong> {{ booking.student.usn }}</p>
+<p><strong>Year:</strong> {{ booking.student.year }}</p>
+<p><strong>Ticket Price:</strong> ₹{{ booking.amount }}</p>
+<a class="btn" href="{{ url_for('payment', booking_id=booking.booking_id) }}">Proceed to Payment</a>
+</div>
+{% endblock %}

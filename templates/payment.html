@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Payment{% endblock %}
+{% block content %}
+<div class="form-card">
+  <h1>Payment</h1>
+  <p>Amount to pay: <strong>₹{{ booking.amount }}</strong></p>
+
+  <div class="payment-placeholder">
+    <div class="qr-payment-box">
+      <img src="{{ url_for('payment_qr_image', booking_id=booking.booking_id) }}" alt="Payment QR for ₹{{ booking.amount }}">
+    </div>
+    <p><strong>Scan this QR to pay ₹{{ booking.amount }}</strong></p>
+  </div>
+
+  <p>After payment, enter your UTR / Transaction ID below.</p>
+  <form method="post">
+    <label>UTR / Transaction ID
+      <input name="utr" required maxlength="100">
+    </label>
+    <button class="btn" type="submit">Submit Payment Details</button>
+  </form>
+</div>
+{% endblock %}

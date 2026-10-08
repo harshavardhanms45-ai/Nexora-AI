@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard{% endblock %}
+{% block content %}
+<h1>Admin Dashboard</h1>
+<section class="grid four">
+  <div class="card"><b>Capacity</b><h2>{{ capacity }}</h2></div>
+  <div class="card"><b>Tickets Sold</b><h2>{{ verified }}</h2></div>
+  <div class="card"><b>Remaining</b><h2>{{ remaining }}</h2></div>
+  <div class="card"><b>Revenue</b><h2>₹{{ revenue }}</h2></div>
+  <div class="card"><b>Registered</b><h2>{{ students }}</h2></div>
+  <div class="card"><b>Pending</b><h2>{{ pending }}</h2></div>
+  <div class="card"><b>Checked In</b><h2>{{ checked }}</h2></div>
+  <div class="card"><b>Cancelled</b><h2>{{ cancelled }}</h2></div>
+</section>
+
+<div class="actions">
+<a class="btn" href="{{ url_for('admin_scan') }}">Open QR Scanner</a>
+<a class="btn secondary" href="{{ url_for('export_csv') }}">Export Attendee CSV</a>
+</div>
+
+<section class="card">
+<h2>Year-wise Statistics</h2>
+<table><tr><th>Year</th><th>Registered</th><th>Sold</th><th>Revenue</th></tr>
+{% for year, reg, sold, rev in year_stats %}
+<tr><td>{{ year }}</td><td>{{ reg }}</td><td>{{ sold }}</td><td>₹{{ rev }}</td></tr>
+{% endfor %}
+</table>
+</section>
+
+<section class="card">
+<h2>Tickets and Payments</h2>
+<div class="table-wrap">
+<table>
+<tr><th>Student</th><th>USN</th><th>Year</th><th>Amount</th><th>UTR</th><th>Payment</th><th>Ticket</th><th>Action</th></tr>
+{% for b in rows %}
+<tr>
+<td>{{ b.student.name }}</td>
+<td>{{ b.student.usn }}</td>
+<td>{{ b.student.year }}</td>
+<td>₹{{ b.amount }}</td>
+<td>{{ b.payment.utr if b.payment and b.payment.utr else "-" }}</td>
+<td>{{ b.payment_status }}</td>
+<td>{{ b.ticket_status }}</td>
+<td>
+{% if b.payment_status == "Pending" and valid_usn_for_year(b.student.usn, b.student.year) %}
+<form class="inline" method="post" action="{{ url_for('verify_payment', booking_id=b.booking_id) }}"><button class="small success-btn">Verify</button></form>
+<form class="inline" method="post" action="{{ url_for('reject_payment', booking_id=b.booking_id) }}"><button class="small danger-btn">Reject</button></form>
+{% elif b.payment_status == "Pending" %}
+<span class="error-text">Invalid USN</span>
+<form class="inline" method="post" action="{{ url_for('reject_payment', booking_id=b.booking_id) }}"><button class="small danger-btn">Reject</button></form>
+{% elif b.ticket_id and b.ticket_status not in ["Cancelled","Refunded"] %}
+<form class="inline" method="post" action="{{ url_for('cancel_ticket', ticket_id=b.ticket_id) }}"><button class="small danger-btn">Cancel</button></form>
+{% endif %}
+</td>
+</tr>
+{% endfor %}
+</table>
+</div>
+</section>
+{% endblock %}

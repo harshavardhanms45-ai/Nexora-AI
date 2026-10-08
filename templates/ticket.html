@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %}Your Event Pass{% endblock %}
+{% block content %}
+<article class="admission-pass">
+  {% if preview %}<div class="pass-preview-banner">DESIGN PREVIEW · SAMPLE DETAILS · NOT VALID FOR ENTRY</div>{% endif %}
+  <header class="pass-header">
+    <div class="pass-brand">
+      <span class="pass-brand-mark">F</span>
+      <span>FRESHERS <span class="pass-brand-light">· 2026</span></span>
+    </div>
+    <span class="pass-type">OFFICIAL ADMISSION PASS</span>
+    <span class="pass-header-orbit pass-header-orbit-one" aria-hidden="true"></span>
+    <span class="pass-header-orbit pass-header-orbit-two" aria-hidden="true"></span>
+    <div class="pass-headline">
+      <p class="pass-kicker">AN EVENING TO REMEMBER</p>
+      <h1>{{ ticket.event.name }}</h1>
+      <p class="pass-venue">{{ ticket.event.venue }} <span>·</span> {{ ticket.event.location }}</p>
+    </div>
+    <div class="pass-event-date">
+      <span>{{ ticket.event.event_date.strftime("%b")|upper }}</span>
+      <strong>{{ ticket.event.event_date.strftime("%d") }}</strong>
+      <span>{{ ticket.event.event_date.strftime("%Y") }}</span>
+    </div>
+  </header>
+
+  <div class="pass-body">
+    <section class="pass-attendee">
+      <p class="pass-section-label">ADMIT ONE</p>
+      <h2>{{ ticket.student.name }}</h2>
+      <div class="pass-details">
+        <div class="pass-detail">
+          <span>USN</span>
+          <strong>{{ ticket.student.usn }}</strong>
+        </div>
+        <div class="pass-detail">
+          <span>CLASS</span>
+          <strong>{{ ticket.student.year }}</strong>
+        </div>
+        <div class="pass-detail">
+          <span>DATE &amp; TIME</span>
+          <strong>{{ ticket.event.event_date.strftime("%d %b %Y") }} · {{ ticket.event.starts_at }}</strong>
+        </div>
+        <div class="pass-detail">
+          <span>VENUE</span>
+          <strong>{{ ticket.event.venue }}</strong>
+        </div>
+      </div>
+      <div class="pass-bottomline">
+        <div>
+          <span>PASS ID</span>
+          <strong>{{ ticket.ticket_id }}</strong>
+        </div>
+        <span class="pass-status"><i aria-hidden="true"></i>{{ ticket.ticket_status }}</span>
+      </div>
+    </section>
+
+    <aside class="pass-stub">
+      <div class="pass-stub-notch pass-stub-notch-top" aria-hidden="true"></div>
+      <p class="pass-stub-label">ENTRY CHECK</p>
+      <div class="pass-qr-frame">
+        {% if preview %}
+        <img src="{{ url_for('ticket_preview_qr') }}" alt="Sample QR code for ticket layout preview; not valid for entry">
+        {% else %}
+        <img src="{{ url_for('qr_image', ticket_id=ticket.ticket_id) }}" alt="QR code for entry to {{ ticket.event.name }}">
+        {% endif %}
+      </div>
+      <p class="pass-scan-title">Your entry pass</p>
+      <p class="pass-scan-help">Present this QR code at the entrance. It can only be scanned once.</p>
+      <div class="pass-stub-divider"></div>
+      <div class="pass-price">
+        <span>PAID</span>
+        <strong>₹{{ ticket.amount }}</strong>
+      </div>
+      <span class="pass-stub-notch pass-stub-notch-bottom" aria-hidden="true"></span>
+    </aside>
+  </div>
+
+  <footer class="pass-footer">
+    <span>FRESHERS PARTY 2026</span>
+    <span>RIT HASSAN <i>·</i> KEEP THIS PASS READY AT ENTRY</span>
+  </footer>
+</article>
+<div class="pass-actions no-print">
+  <button class="btn primary" type="button" onclick="window.print()">Print Pass</button>
+</div>
+{% endblock %}

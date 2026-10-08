@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Scan Result{% endblock %}
+{% block content %}
+<div class="card center">
+<h1>{{ result }}</h1>
+{% if ticket %}
+<p><strong>Ticket ID:</strong> {{ ticket.ticket_id }}</p>
+<p><strong>Student:</strong> {{ ticket.student.name }}</p>
+<p><strong>USN:</strong> {{ ticket.student.usn }}</p>
+<p><strong>Year:</strong> {{ ticket.student.year }}</p>
+<p><strong>Status:</strong> {{ ticket.ticket_status }}</p>
+{% endif %}
+<a class="btn" href="{{ url_for('admin_scan') }}">Scan Another</a>
+</div>
+{% endblock %}
